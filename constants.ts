@@ -75,10 +75,10 @@ export const INITIAL_PRODUCTS: Product[] = [
         category: "Multispectral",
         image: "https://images.unsplash.com/photo-1614352235021-2e20d44fb1c2?auto=format&fit=crop&q=80&w=800",
         price: "Rp 40.000.000",
-        description: "Scope hybrid canggih yang menggabungkan citra thermal dan cahaya tampak dalam satu perangkat.",
-        specs: ["Lensa: 50mm", "Res Thermal: 640x512", "Res Visible: 2592x1944", "NETD: <18mK", "Fitur: LRF 1000m, Auto Ballistic"],
+        description: "Sytong FM06-50LRF adalah teropong/monokuler pencitraan termal yang andal dengan sensor 640x512, lensa 50mm, dan Laser Rangefinder (LRF) terintegrasi untuk pengukuran jarak yang tepat hingga 1000m (atau lebih), menawarkan deteksi termal resolusi tinggi untuk berburu dan pengawasan, dengan fitur-fitur seperti pembesaran 5-20x, perekaman video, Wi-Fi, dan konstruksi tahan air yang tahan lama, sempurna untuk kondisi cahaya rendah dan kondisi buruk.",
+        specs: ["🔭 Sensor Termal Resolusi Tinggi 640x512", "📏 LRF Terintegrasi – Pengukuran Jangkauan 1000m untuk jarak target yang tepat", "🔍 Lensa 50mm – Deteksi termal jarak jauh & kejernihan kristal", "🌧️ Konstruksi tahan lama berperingkat IP – Siap untuk lingkungan berburu apa pun", "🌙 Ideal untuk operasi siang atau malam"],
         marketing: {
-            taglines: ["Dominasi Hybrid Dua Dunia.", "Sensitivitas NETD <18mK Terunggul.", "Masa Depan Teknologi Hunting."],
+            taglines: ["Handal di Segala Kondisi", "Ideal Untuk Operasi Siang Maupun Malam", "Pelacakan Mudah, Versatile Untuk Sniper atau Riffle"],
             prompts: generatePrompts("Sytong FM 06-50 LRF", "Multispectral", "Dominasi Hybrid Dua Dunia.", "Rp 40.000.000"),
             captions: ["Gabungkan thermal dan night vision dalam satu layar. FM 06-50 LRF adalah masa depan! #Multispectral #SytongTech"]
         }
