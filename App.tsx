@@ -6,7 +6,7 @@ import { Toast } from './components/Toast';
 import { EditProductModal } from './components/EditProductModal';
 import { Product } from './types';
 
-const STORAGE_KEY = 'SYTONG_MARKETING_PRODUCTS_V2';
+const STORAGE_KEY = 'ATIRA_MARKETING_KIT_V4';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -16,31 +16,21 @@ export default function App() {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  // Check for hidden admin route via hash
   useEffect(() => {
     const handleHashChange = () => {
-      setIsAdminMode(window.location.hash === '#/admin-helper');
+      setIsAdminMode(window.location.hash === '#/admin-access');
     };
-    
-    // Initial check
     handleHashChange();
-    
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // Initialize data
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Ensure we don't accidentally save an empty list
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setProducts(parsed);
-        } else {
-          setProducts(INITIAL_PRODUCTS);
-        }
+        setProducts(parsed.length > 0 ? parsed : INITIAL_PRODUCTS);
       } catch (e) {
         setProducts(INITIAL_PRODUCTS);
       }
@@ -49,7 +39,6 @@ export default function App() {
     }
   }, []);
 
-  // Save data whenever products change
   useEffect(() => {
     if (products.length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
@@ -60,14 +49,13 @@ export default function App() {
     return products.filter(
       (p) =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.id.toLowerCase().includes(searchQuery.toLowerCase())
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, products]);
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      setToastMessage('Teks berhasil disalin!');
+      setToastMessage('Teks berhasil disalin ke clipboard!');
       setIsToastVisible(true);
     });
   };
@@ -75,109 +63,64 @@ export default function App() {
   const handleSaveProduct = (updated: Product) => {
     setProducts(prev => prev.map(p => p.id === updated.id ? updated : p));
     setEditingProduct(null);
-    setToastMessage('Perubahan berhasil disimpan!');
+    setToastMessage('Perubahan data berhasil disimpan!');
     setIsToastVisible(true);
   };
 
-  const resetToDefault = () => {
-    if (confirm('Reset semua data ke pengaturan awal?')) {
-      setProducts(INITIAL_PRODUCTS);
-      setToastMessage('Data telah di-reset!');
-      setIsToastVisible(true);
-    }
-  };
-
   return (
-    <div className="bg-[#1a1c23] text-[#e2e8f0] font-sans min-h-screen">
-      {/* Header */}
-      <header className="bg-[#252830] border-b border-[#333640] sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <i className="fa-solid fa-crosshairs text-[#f97316] text-3xl"></i>
+    <div className="bg-tactical-900 text-slate-100 font-sans min-h-screen selection:bg-tactical-accent selection:text-tactical-900">
+      <header className="bg-tactical-800 border-b border-tactical-700 sticky top-0 z-50 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="bg-tactical-accent/10 p-2 rounded-lg border border-tactical-accent/30">
+               <i className="fa-solid fa-crosshairs text-tactical-accent text-2xl"></i>
+            </div>
             <div>
-              <h1 className="text-3xl font-display font-bold text-white tracking-wide leading-none uppercase">
-                SYTONG <span className="text-[#f97316]">INDONESIA</span>
+              <h1 className="text-2xl font-display font-bold text-white tracking-wider leading-none uppercase">
+                ATIRA <span className="text-tactical-accent">DIVISION</span>
               </h1>
-              <p className="text-xs text-gray-400 tracking-widest uppercase">
-                Internal Marketing Kit
+              <p className="text-[9px] text-emerald-500 tracking-[0.3em] uppercase font-bold mt-1 opacity-80">
+                Marketing Tactical Kit
               </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-6">
-            {isAdminMode && (
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-[#f97316]/20 border border-[#f97316]/50 rounded text-[10px] font-bold text-[#f97316] uppercase tracking-widest">
-                <i className="fa-solid fa-shield-halved"></i>
-                Admin Mode Active
-              </div>
-            )}
-            
-            {/* Search */}
-            <div className="hidden md:block relative w-64">
+          <div className="hidden md:flex items-center gap-6">
+            <div className="relative w-80">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari Model (mis: HT-60)..."
-                className="w-full pl-10 pr-4 py-2 bg-[#1a1c23] border border-[#333640] rounded text-sm focus:outline-none focus:border-[#f97316] text-white placeholder-gray-600 transition"
+                placeholder="Cari Produk atau Brand..."
+                className="w-full pl-10 pr-4 py-2.5 bg-tactical-900/50 border border-tactical-700 rounded-full text-xs focus:outline-none focus:ring-1 focus:ring-tactical-accent text-white placeholder-gray-600 transition-all"
               />
-              <i className="fa-solid fa-search absolute left-3 top-2.5 text-gray-600"></i>
+              <i className="fa-solid fa-search absolute left-4 top-3 text-gray-600"></i>
             </div>
           </div>
+
+          {isAdminMode && (
+             <div className="text-[10px] font-bold text-tactical-accent border border-tactical-accent/30 px-3 py-1 rounded bg-tactical-accent/5">
+                ADMIN ACCESS ACTIVE
+             </div>
+          )}
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Intro */}
-        <div className="mb-10 text-center">
-          <div className="inline-block bg-[#f97316]/10 text-[#f97316] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border border-[#f97316]/20">
-            Professional Sales & Marketing Resource
-          </div>
-          <h2 className="text-5xl font-display font-bold text-white mb-2 uppercase tracking-wider">
-            Product Database Kit
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        <div className="mb-16 text-center">
+          <h2 className="text-6xl font-display font-bold text-white mb-3 uppercase tracking-tighter">
+            TACTICAL <span className="text-tactical-gold">DATABASE</span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Pusat data konten visual dan copywriting premium untuk Sytong Indonesia. Gunakan prompt AI profesional untuk hasil foto produk kelas dunia.
-          </p>
-          
-          {isAdminMode && (
-            <div className="mt-8 p-4 bg-[#252830] border border-[#f97316]/30 rounded-xl max-w-lg mx-auto">
-              <h3 className="text-xs font-bold text-[#f97316] uppercase mb-3 tracking-widest">Admin Helper Controls</h3>
-              <div className="flex flex-wrap justify-center gap-4">
-                <button 
-                  onClick={resetToDefault}
-                  className="text-[10px] font-bold text-red-500 hover:bg-red-500 hover:text-white transition uppercase tracking-widest border border-red-900/30 px-4 py-2 rounded"
-                >
-                  Reset All Data
-                </button>
-                <a 
-                  href="#"
-                  className="text-[10px] font-bold text-gray-400 hover:text-white transition uppercase tracking-widest border border-gray-700 px-4 py-2 rounded"
-                >
-                  Exit Admin Mode
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile Search */}
-        <div className="md:hidden flex flex-col gap-3 mb-6">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari Model..."
-              className="w-full pl-10 pr-4 py-3 bg-[#252830] border border-[#333640] rounded-xl text-sm focus:outline-none focus:border-[#f97316] text-white placeholder-gray-600 transition"
-            />
-            <i className="fa-solid fa-search absolute left-3 top-3.5 text-gray-600"></i>
+          <div className="flex items-center justify-center gap-4">
+             <div className="h-px w-12 bg-tactical-accent/30"></div>
+             <p className="text-emerald-500 font-bold text-xs tracking-[0.4em] uppercase">
+                Temukan Produkmu disini !
+             </p>
+             <div className="h-px w-12 bg-tactical-accent/30"></div>
           </div>
         </div>
 
-        {/* Product Grid Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-10">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
@@ -187,17 +130,16 @@ export default function App() {
               onEdit={setEditingProduct}
             />
           ))}
+          
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-24 bg-tactical-800 rounded-3xl border border-dashed border-tactical-700">
+               <i className="fa-solid fa-box-open text-5xl text-gray-700 mb-4"></i>
+               <p className="text-gray-500 font-bold uppercase tracking-widest">Produk tidak ditemukan</p>
+            </div>
+          )}
         </div>
-
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-20 bg-[#252830]/50 rounded-2xl border border-dashed border-[#333640]">
-            <i className="fa-solid fa-ghost text-4xl text-gray-700 mb-4 block"></i>
-            <p className="text-gray-500 font-display text-2xl uppercase">Tidak ada produk ditemukan</p>
-          </div>
-        )}
       </main>
 
-      {/* Admin Edit Modal */}
       {editingProduct && (
         <EditProductModal 
           product={editingProduct} 
@@ -206,22 +148,20 @@ export default function App() {
         />
       )}
 
-      {/* Toast Notification */}
       <Toast
         message={toastMessage}
         isVisible={isToastVisible}
         onHide={() => setIsToastVisible(false)}
       />
 
-      <footer className="mt-20 py-10 border-t border-[#333640] text-center bg-[#1a1c23]">
-        <div className="flex justify-center gap-6 mb-4">
-          <i className="fa-brands fa-instagram text-gray-600 hover:text-[#f97316] cursor-pointer transition"></i>
-          <i className="fa-brands fa-facebook text-gray-600 hover:text-[#f97316] cursor-pointer transition"></i>
-          <i className="fa-brands fa-youtube text-gray-600 hover:text-[#f97316] cursor-pointer transition"></i>
+      <footer className="mt-20 py-16 border-t border-tactical-700 text-center bg-slate-950">
+        <div className="flex flex-col items-center gap-4">
+           <i className="fa-solid fa-crosshairs text-emerald-900 text-4xl mb-2"></i>
+           <p className="font-display font-bold text-2xl text-emerald-700 uppercase tracking-widest">ATIRA HUNTING DIVISION</p>
+           <p className="text-gray-700 text-[9px] uppercase tracking-[0.5em] font-bold">
+             Premium Optical Instruments &copy; 2026.
+           </p>
         </div>
-        <p className="text-gray-600 text-[10px] uppercase tracking-[0.3em] font-bold">
-          Sytong Indonesia Tactical Division | &copy; 2024
-        </p>
       </footer>
     </div>
   );

@@ -7,17 +7,16 @@ export interface MarketingData {
 
 export interface Product {
   id: string;
+  brand: string;
   name: string;
   category: string;
-  image: string;
   price: string;
+  image: string; // Featured image
+  images: string[]; // All gallery images
   description: string;
   specs: string[];
   marketing: MarketingData;
-  posterSettings?: {
-    logoUrl?: string;
-    customBottomText?: string;
-  };
 }
 
-export type TabType = 'taglines' | 'prompts' | 'captions' | 'poster';
+// Fixed: Added 'gallery' to TabType to match usage in components
+export type TabType = 'taglines' | 'prompts' | 'captions' | 'poster' | 'gallery';
