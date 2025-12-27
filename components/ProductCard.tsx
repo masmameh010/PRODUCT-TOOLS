@@ -79,7 +79,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
             ))}
           </div>
 
-          {/* Tombol Navigasi Manual (Kiri/Kanan) */}
+          {/* Navigasi Manual */}
           {product.images.length > 1 && (
             <>
               <button 
@@ -107,7 +107,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
             ))}
           </div>
 
-          {/* Info Labels */}
+          {/* Labels Overlay */}
           <div className="absolute top-4 left-4 z-10 pointer-events-none">
             <span className="bg-tactical-gold text-white px-3 py-1 rounded-md font-bold shadow-lg text-[11px] tracking-wider uppercase border border-white/10">
               {product.price}
@@ -119,7 +119,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
           </div>
         </div>
 
-        {/* Informasi Produk (Sesuai CSV) */}
+        {/* Informasi Produk */}
         <div className="p-6 bg-slate-900 flex-1 border-t border-tactical-700/50">
           <h3 className="text-2xl font-display font-bold text-white uppercase tracking-wider mb-1">
             {product.name}
