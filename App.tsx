@@ -5,6 +5,8 @@ import { ProductCard } from './components/ProductCard';
 import { Toast } from './components/Toast';
 import { EditProductModal } from './components/EditProductModal';
 import { Product } from './types';
+import { db, isCloudConnected } from './firebase';
+import { collection, getDocs, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
 const STORAGE_KEY = 'ATIRA_MARKETING_KIT_V4';
 
@@ -15,7 +17,9 @@ export default function App() {
   const [isToastVisible, setIsToastVisible] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Auth & Admin check
   useEffect(() => {
     const handleHashChange = () => {
       setIsAdminMode(window.location.hash === '#/admin-access');
@@ -25,7 +29,36 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Sync with Firestore or LocalStorage
   useEffect(() => {
+    if (isCloudConnected && db) {
+      // Menggunakan Firebase Firestore
+      const productsCol = collection(db, 'products');
+      
+      const unsubscribe = onSnapshot(productsCol, (snapshot) => {
+        const cloudData = snapshot.docs.map(doc => doc.data() as Product);
+        if (cloudData.length > 0) {
+          setProducts(cloudData);
+        } else {
+          // Jika cloud kosong, upload INITIAL_PRODUCTS sebagai starter
+          setProducts(INITIAL_PRODUCTS);
+          INITIAL_PRODUCTS.forEach(async (p) => {
+            await setDoc(doc(db, 'products', p.id), p);
+          });
+        }
+        setIsLoading(false);
+      }, (error) => {
+        console.error("Firebase Sync Error:", error);
+        loadFromLocalStorage();
+      });
+
+      return () => unsubscribe();
+    } else {
+      loadFromLocalStorage();
+    }
+  }, []);
+
+  const loadFromLocalStorage = () => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
@@ -37,21 +70,8 @@ export default function App() {
     } else {
       setProducts(INITIAL_PRODUCTS);
     }
-  }, []);
-
-  useEffect(() => {
-    if (products.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-    }
-  }, [products]);
-
-  const filteredProducts = useMemo(() => {
-    return products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.brand.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [searchQuery, products]);
+    setIsLoading(false);
+  };
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -60,12 +80,35 @@ export default function App() {
     });
   };
 
-  const handleSaveProduct = (updated: Product) => {
+  const handleSaveProduct = async (updated: Product) => {
+    // Update Local State
     setProducts(prev => prev.map(p => p.id === updated.id ? updated : p));
+    
+    // Update Local Storage
+    const newProducts = products.map(p => p.id === updated.id ? updated : p);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newProducts));
+
+    // Update Cloud Firestore
+    if (isCloudConnected && db) {
+      try {
+        await setDoc(doc(db, 'products', updated.id), updated);
+      } catch (e) {
+        console.error("Cloud Save Failed:", e);
+      }
+    }
+
     setEditingProduct(null);
-    setToastMessage('Perubahan data berhasil disimpan!');
+    setToastMessage('Data berhasil disimpan ke cloud!');
     setIsToastVisible(true);
   };
+
+  const filteredProducts = useMemo(() => {
+    return products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, products]);
 
   return (
     <div className="bg-tactical-900 text-slate-100 font-sans min-h-screen selection:bg-tactical-accent selection:text-tactical-900">
@@ -76,9 +119,17 @@ export default function App() {
                <i className="fa-solid fa-crosshairs text-tactical-accent text-2xl"></i>
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold text-white tracking-wider leading-none uppercase">
-                ATIRA <span className="text-tactical-accent">DIVISION</span>
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-display font-bold text-white tracking-wider leading-none uppercase">
+                  ATIRA <span className="text-tactical-accent">DIVISION</span>
+                </h1>
+                {isCloudConnected && (
+                  <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse-soft"></div>
+                    <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-tighter">Live Cloud</span>
+                  </div>
+                )}
+              </div>
               <p className="text-[9px] text-emerald-500 tracking-[0.3em] uppercase font-bold mt-1 opacity-80">
                 Marketing Tactical Kit
               </p>
@@ -114,14 +165,14 @@ export default function App() {
           <div className="flex items-center justify-center gap-4">
              <div className="h-px w-12 bg-tactical-accent/30"></div>
              <p className="text-emerald-500 font-bold text-xs tracking-[0.4em] uppercase">
-                Temukan Produkmu disini !
+                {isLoading ? 'Sedang Memuat Data...' : 'Temukan Produkmu disini !'}
              </p>
              <div className="h-px w-12 bg-tactical-accent/30"></div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-10">
-          {filteredProducts.map((product) => (
+          {!isLoading && filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -131,7 +182,14 @@ export default function App() {
             />
           ))}
           
-          {filteredProducts.length === 0 && (
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-30">
+               <i className="fa-solid fa-circle-notch fa-spin text-4xl text-tactical-accent"></i>
+               <p className="uppercase tracking-[0.3em] font-bold text-xs">Menyambungkan ke Database...</p>
+            </div>
+          )}
+
+          {!isLoading && filteredProducts.length === 0 && (
             <div className="text-center py-24 bg-tactical-800 rounded-3xl border border-dashed border-tactical-700">
                <i className="fa-solid fa-box-open text-5xl text-gray-700 mb-4"></i>
                <p className="text-gray-500 font-bold uppercase tracking-widest">Produk tidak ditemukan</p>
