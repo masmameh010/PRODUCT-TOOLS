@@ -121,7 +121,7 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-display font-bold text-white tracking-wider leading-none uppercase">
-                  ATIRA <span className="text-tactical-accent">DIVISION</span>
+                  ATIRA HUNTING <span className="text-tactical-accent">DIVISION</span>
                 </h1>
                 {isCloudConnected && (
                   <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
@@ -131,7 +131,7 @@ export default function App() {
                 )}
               </div>
               <p className="text-[9px] text-emerald-500 tracking-[0.3em] uppercase font-bold mt-1 opacity-80">
-                Marketing Tactical Kit
+                KATALOG PRODUK
               </p>
             </div>
           </div>
@@ -159,8 +159,8 @@ export default function App() {
 
       <main className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-16 text-center">
-          <h2 className="text-6xl font-display font-bold text-white mb-3 uppercase tracking-tighter">
-            TACTICAL <span className="text-tactical-gold">DATABASE</span>
+          <h2 className="text-5xl md:text-6xl font-display font-bold text-white mb-3 uppercase tracking-tighter">
+            AKSESORIS BERBURU <span className="text-tactical-gold">PALING DICARI</span>
           </h2>
           <div className="flex items-center justify-center gap-4">
              <div className="h-px w-12 bg-tactical-accent/30"></div>
