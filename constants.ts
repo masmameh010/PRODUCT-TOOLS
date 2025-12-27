@@ -6,11 +6,11 @@ const createDummyMarketing = (brand: string, name: string, price: string) => ({
     `${brand} ${name}: Akurasi Tanpa Kompromi.`,
     `Teknologi Malam Terbaik di Kelasnya.`,
     `Target Terkunci, Hasil Maksimal.`,
-    `Pilihan Profesional Hunter Indonesia.`,
-    `Kualitas Premium, Harga Kompetitif.`
+    `Pilihan Profesional Hunter Indonesia.`
   ],
   prompts: [
-    `Professional tactical marketing poster for ${brand} ${name}. Dark background, emerald green lighting, 8k resolution.`
+    `A realistic product photograph with [Uploaded image] as the single main subject, centered perfectly in the frame, preserving its original shape, color, texture, branding, and proportions without any alteration. The product stands on a dark gray rugged rocky surface with natural rough texture. Warm golden-hour sunset lighting gently illuminates the scene, creating soft highlights and subtle shadows. The background is softly blurred, revealing a distant hazy mountain landscape with a silhouetted peak and a smooth gradient sky transitioning from soft pink to pale blue.\n\nAt the center-bottom of the frame, the product title text "${name}" appears as a bold visual element. The font style is a military stencil-inspired display font, rough-cut edges, uneven stencil gaps, slightly distressed texture, non-formal, not sans serif, evoking tactical equipment markings. Font color is deep olive drab green mixed with muted army khaki tones, matte finish. The text features a thick dark charcoal-black outline for strong contrast, with a subtle inner shadow to enhance depth. The text feels integrated into the scene, as if printed or stamped onto the environment, not floating or overlay-like.\n\nNo additional objects, no decorative props, clean composition, professional product photography, natural realism.`,
+    `A clean professional product photography shot featuring [Uploaded image] as the only subject, placed naturally on a pristine white marble surface with subtle natural veining. The product remains completely unchanged from the original reference, maintaining exact material, color, labeling, and form. The background consists of a soft gray textured studio wall with faint diagonal patterns, slightly out of focus. Gentle natural lighting produces delicate shadows and controlled reflections on the marble surface.\n\nAt the center-bottom of the frame, a bold product title text "${name}" is clearly visible. The typography uses a rugged military-style stencil font with thick block shapes, distressed cuts, and industrial character, non-formal and not sans serif. Font color is muted tactical green leaning toward olive-drab, combined with hints of dark moss green. The text is reinforced with a strong blackened-gunmetal outline, slightly weathered, enhancing legibility against the bright marble surface. The text appears firmly grounded within the composition, like official military labeling, not decorative.\n\nNo additional objects, no plants, no accessories, pure minimalist studio focus, premium realism. 3:4`
   ],
   captions: [
     `Tingkatkan pengalaman berburu Anda dengan ${brand} ${name}. Dirancang khusus untuk ketahanan ekstrem dan akurasi tinggi di segala kondisi cuaca. Segera miliki unitnya!`,
@@ -19,7 +19,7 @@ const createDummyMarketing = (brand: string, name: string, price: string) => ({
   ]
 });
 
-// List produk 3-24 sesuai permintaan user (Data Dummy Berstruktur Serupa)
+// List produk 3-24
 const PRODUCT_LIST_DATA = [
   { id: "3", brand: "STELLAR", name: "AMS650-LRF", price: "Rp27,500,000", cat: "Thermal Scope" },
   { id: "4", brand: "SYTONG", name: "FM06-50LRF", price: "Rp40,000,000", cat: "Multispectral" },
@@ -59,13 +59,9 @@ export const INITIAL_PRODUCTS: Product[] = [
       "https://i.imgur.com/kbyIyL9.png", "https://i.imgur.com/RjqqpB6.png", 
       "https://i.imgur.com/kevZ689.png"
     ],
-    description: "Lensa 25mm, Laser Rangefinder (LRF) Untuk Akurasi Target Yang Lebih Baik, Memiliki Sertifikasi Tahan Air dan Bodi Yang Kokoh Untuk Penggunaan Dalam Cuaca Ekstrem.\n\nDeteksi Panas Akurat: Menggunakan teknologi pencitraan termal yang memungkinkan pengguna mendeteksi tanda panas (manusia atau hewan) dalam kondisi gelap total, kabut, atau melalui vegetasi rapat.\n\nFitur LRF Terintegrasi: Berbeda dengan teropong biasa, adanya Laser Rangefinder membantu pengguna mengukur jarak objek secara presisi.\n\nDesain Ergonomis dan Tahan Cuaca: Didesain untuk penggunaan jangka panjang di lapangan dengan ketahanan terhadap air, sehingga aman digunakan saat hujan atau salju.\n\nPenggunaan Siang dan Malam: Teknologi termal pada perangkat ini dapat digunakan dengan aman pada siang hari.",
+    description: "Lensa 25mm, Laser Rangefinder (LRF) Untuk Akurasi Target Yang Lebih Baik, Memiliki Sertifikasi Tahan Air dan Bodi Yang Kokoh Untuk Penggunaan Dalam Cuaca Ekstrem.",
     specs: ["Lensa 25mm", "Laser Rangefinder (LRF)", "IP67 Waterproof", "Siang/Malam", "Fungsi Rekaman"],
-    marketing: {
-      taglines: ["Under 20Jt , Akurasi Maksimal", "Harga BPJS, Dipake Anti Ngenes", "Murah, Tapi Nggak Murahan"],
-      prompts: ["Tactical marketing poster for Stellar AMS225-LRF. Tactical aesthetic."],
-      captions: ["Perangkat Yang sangat cocok bagi pengguna yang mencari keseimbangan antara performa deteksi termal menengah dan fitur navigasi jarak jauh dalam satu paket praktis."]
-    }
+    marketing: createDummyMarketing("STELLAR", "AMS225-LRF", "Rp15,000,000")
   },
   {
     id: "2",
@@ -80,13 +76,9 @@ export const INITIAL_PRODUCTS: Product[] = [
       "https://i.imgur.com/XjxOqc6.png", "https://i.imgur.com/5XsWbvy.png", 
       "https://i.imgur.com/owMCfBN.png"
     ],
-    description: "Teropong pencitraan termal canggih yang dirancang untuk presisi tinggi di medan berburu atau observasi malam hari. Seri 335 menawarkan resolusi sensor yang lebih tinggi untuk detail objek yang lebih tajam.\n\nResolusi Sensor: 384 x 288 piksel dengan ukuran piksel 12μm.\nLensa Objektif: 35mm F1.0 untuk penangkapan cahaya yang optimal.\nLaser Rangefinder (LRF): Jangkauan hingga 1000 meter dengan akurasi tinggi.\n\nKeunggulan:\nKejelasan Visual Superior: Memberikan gambar yang jauh lebih detail, memudahkan identifikasi target.\nKalkulasi Balistik Pintar: Membantu pengguna menyesuaikan titik bidik otomatis.",
+    description: "Teropong pencitraan termal canggih yang dirancang untuk presisi tinggi di medan berburu atau observasi malam hari. Seri 335 menawarkan resolusi sensor yang lebih tinggi untuk detail objek yang lebih tajam.",
     specs: ["Lensa 35mm F1.0", "Sensor 384x288", "LRF 1000m", "Tahan Guncangan 1000g", "Baterai 18650"],
-    marketing: {
-      taglines: ["Precision in Every Pixel, Clarity in Every Night.", "Stellar AMS335LRF: See Beyond the Shadows.", "Target Akurat, Jarak Bukan Lagi Penghambat."],
-      prompts: ["Tactical marketing poster for Stellar AMS335-LRF. High-end lighting."],
-      captions: ["Jangan biarkan kegelapan membatasi pandanganmu. Dengan Stellar AMS335LRF, setiap detail panas terlihat nyata. Dilengkapi Laser Rangefinder 1000m dan kalkulasi balistik pintar."]
-    }
+    marketing: createDummyMarketing("STELLAR", "AMS335-LRF", "Rp20,000,000")
   },
   ...PRODUCT_LIST_DATA.map(p => ({
     id: p.id,
@@ -96,7 +88,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: p.price,
     image: `https://placehold.co/600x400/1e293b/10b981?text=${p.name}`,
     images: [`https://placehold.co/600x400/1e293b/10b981?text=${p.name}`, `https://placehold.co/600x400/1e293b/d97706?text=${p.brand}+${p.name}`],
-    description: `Deskripsi untuk ${p.brand} ${p.name} akan diperbarui segera. Produk ini menawarkan performa ${p.cat} yang stabil untuk kebutuhan berburu malam hari Anda. Dirancang dengan teknologi sensor terkini di kelasnya.`,
+    description: `Deskripsi untuk ${p.brand} ${p.name} akan diperbarui segera. Produk ini menawarkan performa ${p.cat} yang stabil.`,
     specs: ["Lensa Premium", "Sensor Sensitif", "IP67 Rating", "Desain Ergonomis", "Garansi Resmi"],
     marketing: createDummyMarketing(p.brand, p.name, p.price)
   }))
