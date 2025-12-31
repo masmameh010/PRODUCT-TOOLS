@@ -99,7 +99,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
             ))}
           </div>
 
-          {/* Labels - PRICE NOW A CTA TEXT */}
+          {/* Labels - PRICE NOW DYNAMIC */}
           <div className="absolute top-6 left-6 z-10">
             <a 
               href={product.shopLink}
@@ -108,7 +108,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
               className="bg-tactical-gold text-white px-5 py-2 rounded-lg font-bold shadow-2xl text-xs tracking-wider uppercase border border-white/10 flex items-center gap-2 hover:bg-amber-600 transition-colors group/price"
             >
               <i className="fa-solid fa-cart-shopping text-[10px] group-hover/price:animate-bounce"></i>
-              DAPATKAN DI SINI
+              {product.price || "DAPATKAN DI SINI"}
             </a>
           </div>
         </div>
@@ -270,7 +270,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
                   className="absolute bottom-0 left-0 right-0 py-6 border-t border-white/5 text-center bg-black/80 backdrop-blur-md hover:bg-tactical-gold/20 transition-all block"
                 >
                   <p className="text-tactical-gold font-bold text-xl tracking-[0.1em] font-display uppercase">
-                    DAPATKAN DI SINI
+                    {product.price || "DAPATKAN DI SINI"}
                   </p>
                   <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest block mt-1">Klik Untuk Beli</span>
                 </a>

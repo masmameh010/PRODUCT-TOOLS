@@ -32,15 +32,12 @@ export default function App() {
   // Sync with Firestore or LocalStorage
   useEffect(() => {
     if (isCloudConnected && db) {
-      // Menggunakan Firebase Firestore
       const productsCol = collection(db, 'products');
-      
       const unsubscribe = onSnapshot(productsCol, (snapshot) => {
         const cloudData = snapshot.docs.map(doc => doc.data() as Product);
         if (cloudData.length > 0) {
           setProducts(cloudData);
         } else {
-          // Jika cloud kosong, upload INITIAL_PRODUCTS sebagai starter
           setProducts(INITIAL_PRODUCTS);
           INITIAL_PRODUCTS.forEach(async (p) => {
             await setDoc(doc(db, 'products', p.id), p);
@@ -51,7 +48,6 @@ export default function App() {
         console.error("Firebase Sync Error:", error);
         loadFromLocalStorage();
       });
-
       return () => unsubscribe();
     } else {
       loadFromLocalStorage();
@@ -75,30 +71,31 @@ export default function App() {
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      setToastMessage('Teks berhasil disalin ke clipboard!');
+      setToastMessage('Teks berhasil disalin!');
       setIsToastVisible(true);
     });
   };
 
   const handleSaveProduct = async (updated: Product) => {
-    // Update Local State
-    setProducts(prev => prev.map(p => p.id === updated.id ? updated : p));
-    
-    // Update Local Storage
-    const newProducts = products.map(p => p.id === updated.id ? updated : p);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newProducts));
-
-    // Update Cloud Firestore
-    if (isCloudConnected && db) {
-      try {
-        await setDoc(doc(db, 'products', updated.id), updated);
-      } catch (e) {
-        console.error("Cloud Save Failed:", e);
+    // Gunakan functional update untuk memastikan data paling baru yang diproses
+    setProducts(prevProducts => {
+      const updatedList = prevProducts.map(p => p.id === updated.id ? updated : p);
+      
+      // Simpan ke Local Storage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
+      
+      // Simpan ke Cloud jika tersedia
+      if (isCloudConnected && db) {
+        setDoc(doc(db, 'products', updated.id), updated).catch(e => {
+          console.error("Cloud Save Failed:", e);
+        });
       }
-    }
+      
+      return updatedList;
+    });
 
     setEditingProduct(null);
-    setToastMessage('Data berhasil disimpan ke cloud!');
+    setToastMessage('Data Produk Berhasil Diperbarui!');
     setIsToastVisible(true);
   };
 
@@ -224,4 +221,3 @@ export default function App() {
     </div>
   );
 }
-

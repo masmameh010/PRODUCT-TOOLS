@@ -49,9 +49,25 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
     setFormData(prev => ({ ...prev, specs: updated }));
   };
 
+  // --- GALLERY MANAGEMENT ---
   const handleGalleryChange = (index: number, value: string) => {
     const updated = [...formData.images];
     updated[index] = value;
+    setFormData(prev => ({ ...prev, images: updated }));
+  };
+
+  const addGalleryField = () => {
+    if (formData.images.length >= 10) return; // Maksimal 10 gambar
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, ""]
+    }));
+  };
+
+  const removeGalleryField = (index: number) => {
+    if (formData.images.length <= 1) return; // Minimal harus ada 1 gambar
+    const updated = [...formData.images];
+    updated.splice(index, 1);
     setFormData(prev => ({ ...prev, images: updated }));
   };
 
@@ -88,11 +104,12 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                   />
                 </div>
                 <div className="md:col-span-1">
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Label Harga</label>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Label Tombol (CTA)</label>
                   <input 
                     value={formData.price} 
                     onChange={e => handleChange('price', e.target.value)}
                     className="w-full bg-slate-900/50 border border-white/10 rounded p-3 text-tactical-gold font-bold focus:border-tactical-accent outline-none"
+                    placeholder="Contoh: DAPATKAN DI SINI"
                   />
                 </div>
                 <div className="md:col-span-1">
@@ -117,30 +134,46 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
 
           {/* SECTION 2: MEDIA MANAGEMENT */}
           <section className="space-y-4">
-             <div className="flex items-center gap-2 mb-4">
-                <div className="h-4 w-1 bg-tactical-accent"></div>
-                <h3 className="text-sm font-bold text-white uppercase tracking-widest">Media & Gambar</h3>
+             <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-1 bg-tactical-accent"></div>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-widest">Media & Gambar Galeri</h3>
+                </div>
+                <button 
+                  onClick={addGalleryField}
+                  className="text-[10px] bg-tactical-accent/10 text-tactical-accent px-4 py-2 rounded border border-tactical-accent/20 hover:bg-tactical-accent hover:text-black transition-all font-bold uppercase tracking-widest"
+                >
+                  <i className="fa-solid fa-plus mr-2"></i> Tambah Link Gambar
+                </button>
              </div>
              <div className="space-y-4 bg-black/20 p-6 rounded-xl border border-white/5">
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Featured Image URL (Utama)</label>
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Featured Image URL (Sampul Utama)</label>
                   <input 
                     value={formData.image} 
                     onChange={e => handleChange('image', e.target.value)}
                     className="w-full bg-slate-900 border border-white/10 rounded p-3 text-xs text-blue-400 font-mono outline-none"
                   />
                 </div>
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Gallery Images (Maks 7)</label>
-                  <div className="grid grid-cols-1 gap-2">
+                <div className="space-y-3">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Slide Galeri (Geser)</label>
+                  <div className="grid grid-cols-1 gap-3">
                     {formData.images.map((img, i) => (
-                      <div key={i} className="flex gap-2">
-                        <span className="bg-slate-800 text-gray-500 w-8 flex items-center justify-center text-[10px] rounded">{i+1}</span>
+                      <div key={i} className="flex gap-2 group/field">
+                        <span className="bg-slate-800 text-gray-500 w-10 flex items-center justify-center text-[10px] rounded font-bold">{i+1}</span>
                         <input 
                           value={img} 
                           onChange={e => handleGalleryChange(i, e.target.value)}
-                          className="flex-1 bg-slate-900 border border-white/10 rounded p-2 text-[10px] text-gray-400 font-mono outline-none"
+                          className="flex-1 bg-slate-900 border border-white/10 rounded p-3 text-[11px] text-gray-400 font-mono outline-none focus:border-tactical-accent"
+                          placeholder="https://i.imgur.com/..."
                         />
+                        <button 
+                          onClick={() => removeGalleryField(i)}
+                          className="w-12 bg-red-500/10 text-red-500 border border-red-500/20 rounded hover:bg-red-500 hover:text-white transition-all flex items-center justify-center"
+                          title="Hapus Gambar Ini"
+                        >
+                          <i className="fa-solid fa-trash-can text-sm"></i>
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -174,7 +207,6 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                 <h3 className="text-sm font-bold text-white uppercase tracking-widest">Marketing Suite</h3>
              </div>
              
-             {/* TAGLINES */}
              <div>
                 <div className="flex justify-between items-center mb-3">
                   <label className="block text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Headlines / Taglines</label>
@@ -196,10 +228,9 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                 ))}
              </div>
 
-             {/* PROMPTS */}
              <div>
                 <div className="flex justify-between items-center mb-3">
-                  <label className="block text-[10px] font-bold text-blue-500 uppercase tracking-widest">AI Visual Prompts (Image Gen)</label>
+                  <label className="block text-[10px] font-bold text-blue-500 uppercase tracking-widest">AI Visual Prompts</label>
                   <button onClick={() => addMarketingField('prompts')} className="text-[9px] bg-blue-500/10 text-blue-500 px-2 py-1 rounded border border-blue-500/20 hover:bg-blue-500 hover:text-white transition">
                     + Tambah Prompt
                   </button>
@@ -210,7 +241,6 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                       value={item} 
                       onChange={e => handleMarketingChange('prompts', i, e.target.value)}
                       className="flex-1 bg-black/40 border border-blue-500/20 rounded p-4 text-[11px] text-blue-400 font-mono h-48 focus:border-blue-500 outline-none resize-none"
-                      placeholder="Masukkan prompt AI di sini..."
                     />
                     <button onClick={() => removeMarketingField('prompts', i)} className="text-red-500/50 hover:text-red-500 px-2">
                       <i className="fa-solid fa-trash-can text-xs"></i>
@@ -219,10 +249,9 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                 ))}
              </div>
 
-             {/* CAPTIONS */}
              <div>
                 <div className="flex justify-between items-center mb-3">
-                  <label className="block text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Long Captions / Copywriting</label>
+                  <label className="block text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Long Captions</label>
                   <button onClick={() => addMarketingField('captions')} className="text-[9px] bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded border border-emerald-500/20 hover:bg-emerald-500 hover:text-black transition">
                     + Tambah Caption
                   </button>
@@ -243,7 +272,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
           </section>
         </div>
 
-        <div className="sticky bottom-0 bg-[#0f172a] border-t border-white/5 p-6 flex justify-end gap-4 z-10">
+        <div className="sticky bottom-0 bg-[#0f172a] border-t border-white/5 p-6 flex justify-end gap-4 z-10 shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
           <button 
             onClick={onClose}
             className="px-6 py-2.5 rounded font-bold uppercase text-[10px] text-gray-500 hover:text-white transition"
@@ -254,7 +283,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
             onClick={() => onSave(formData)}
             className="px-10 py-2.5 rounded bg-tactical-accent text-tactical-900 font-bold uppercase text-[10px] hover:bg-emerald-400 transition shadow-[0_0_20px_rgba(16,185,129,0.2)]"
           >
-            Update Produk di Cloud
+            Update & Simpan Cloud
           </button>
         </div>
       </div>
