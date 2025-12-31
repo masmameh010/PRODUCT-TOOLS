@@ -57,7 +57,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
   };
 
   const addGalleryField = () => {
-    if (formData.images.length >= 10) return; // Maksimal 10 gambar
+    if (formData.images.length >= 15) return; // Maksimal 15 gambar
     setFormData(prev => ({
       ...prev,
       images: [...prev.images, ""]
@@ -65,7 +65,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
   };
 
   const removeGalleryField = (index: number) => {
-    if (formData.images.length <= 1) return; // Minimal harus ada 1 gambar
+    // Kita biarkan gallery kosong jika user mau, karena Featured Image akan jadi slide 1 tetap.
     const updated = [...formData.images];
     updated.splice(index, 1);
     setFormData(prev => ({ ...prev, images: updated }));
@@ -140,23 +140,26 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                   <h3 className="text-sm font-bold text-white uppercase tracking-widest">Media & Gambar Galeri</h3>
                 </div>
                 <button 
+                  type="button"
                   onClick={addGalleryField}
-                  className="text-[10px] bg-tactical-accent/10 text-tactical-accent px-4 py-2 rounded border border-tactical-accent/20 hover:bg-tactical-accent hover:text-black transition-all font-bold uppercase tracking-widest"
+                  className="text-[10px] bg-tactical-accent/20 text-tactical-accent px-4 py-2 rounded border border-tactical-accent/40 hover:bg-tactical-accent hover:text-black transition-all font-bold uppercase tracking-widest"
                 >
-                  <i className="fa-solid fa-plus mr-2"></i> Tambah Link Gambar
+                  <i className="fa-solid fa-plus mr-2"></i> Tambah Link Gambar Galeri
                 </button>
              </div>
              <div className="space-y-4 bg-black/20 p-6 rounded-xl border border-white/5">
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Featured Image URL (Sampul Utama)</label>
+                  <label className="block text-[10px] font-bold text-emerald-500 uppercase mb-2 tracking-widest">URL Utama (Thumbnail & Slide 1)</label>
                   <input 
                     value={formData.image} 
                     onChange={e => handleChange('image', e.target.value)}
-                    className="w-full bg-slate-900 border border-white/10 rounded p-3 text-xs text-blue-400 font-mono outline-none"
+                    className="w-full bg-slate-900 border border-emerald-500/30 rounded p-3 text-xs text-blue-400 font-mono outline-none focus:border-emerald-500"
+                    placeholder="Masukkan Link URL Gambar Utama disini"
                   />
+                  <p className="text-[9px] text-gray-600 mt-1 uppercase italic">*Gambar ini akan menjadi yang pertama kali dilihat user.</p>
                 </div>
-                <div className="space-y-3">
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Slide Galeri (Geser)</label>
+                <div className="space-y-3 mt-6">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Gambar Tambahan (Galeri Slide)</label>
                   <div className="grid grid-cols-1 gap-3">
                     {formData.images.map((img, i) => (
                       <div key={i} className="flex gap-2 group/field">
@@ -168,6 +171,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                           placeholder="https://i.imgur.com/..."
                         />
                         <button 
+                          type="button"
                           onClick={() => removeGalleryField(i)}
                           className="w-12 bg-red-500/10 text-red-500 border border-red-500/20 rounded hover:bg-red-500 hover:text-white transition-all flex items-center justify-center"
                           title="Hapus Gambar Ini"
@@ -176,6 +180,11 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                         </button>
                       </div>
                     ))}
+                    {formData.images.length === 0 && (
+                      <div className="text-center py-4 bg-slate-900/30 border border-dashed border-white/5 rounded">
+                        <p className="text-[10px] text-gray-600 uppercase font-bold">Galeri Tambahan Kosong</p>
+                      </div>
+                    )}
                   </div>
                 </div>
              </div>
@@ -274,12 +283,14 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
 
         <div className="sticky bottom-0 bg-[#0f172a] border-t border-white/5 p-6 flex justify-end gap-4 z-10 shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
           <button 
+            type="button"
             onClick={onClose}
             className="px-6 py-2.5 rounded font-bold uppercase text-[10px] text-gray-500 hover:text-white transition"
           >
             Batalkan
           </button>
           <button 
+            type="button"
             onClick={() => onSave(formData)}
             className="px-10 py-2.5 rounded bg-tactical-accent text-tactical-900 font-bold uppercase text-[10px] hover:bg-emerald-400 transition shadow-[0_0_20px_rgba(16,185,129,0.2)]"
           >

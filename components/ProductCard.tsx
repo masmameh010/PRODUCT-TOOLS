@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Product, TabType } from '../types';
 import { ImageLightbox } from './ImageLightbox';
 
@@ -15,6 +15,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollIndex, setScrollIndex] = useState(0);
+
+  // Menggabungkan Featured Image dengan Gallery Images agar Featured Image selalu jadi yang pertama
+  // dan menghindari duplikasi jika link yang sama ada di kedua tempat.
+  const allImages = useMemo(() => {
+    const gallery = product.images || [];
+    const mainImg = product.image;
+    if (!mainImg) return gallery;
+    
+    // Filter gallery untuk menghapus duplikat dari main image
+    const filteredGallery = gallery.filter(img => img !== mainImg && img.trim() !== "");
+    return [mainImg, ...filteredGallery];
+  }, [product.image, product.images]);
 
   const handleCopy = (e: React.MouseEvent, text: string) => {
     const element = e.currentTarget as HTMLElement;
@@ -66,7 +78,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
             onScroll={handleScroll}
             className="flex h-full overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide cursor-grab active:cursor-grabbing"
           >
-            {product.images.map((img, idx) => (
+            {allImages.map((img, idx) => (
               <div 
                 key={idx} 
                 className="min-w-full h-full snap-center flex items-center justify-center p-4"
@@ -81,7 +93,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
           </div>
 
           {/* Navigation Overlay */}
-          {product.images.length > 1 && (
+          {allImages.length > 1 && (
             <>
               <button onClick={scrollPrev} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/40 backdrop-blur-md text-white rounded-full flex items-center justify-center opacity-0 lg:group-hover/gallery:opacity-100 transition-all hover:bg-tactical-accent hover:text-black z-20">
                 <i className="fa-solid fa-chevron-left"></i>
@@ -94,7 +106,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
 
           {/* Indicators */}
           <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-20">
-            {product.images.map((_, idx) => (
+            {allImages.map((_, idx) => (
               <div key={idx} className={`h-1 rounded-full transition-all duration-500 ${scrollIndex === idx ? 'w-8 bg-tactical-accent' : 'w-2 bg-white/10'}`}></div>
             ))}
           </div>
@@ -135,7 +147,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
             ))}
           </div>
 
-          <p className="text-[11px] text-gray-500 leading-relaxed italic line-clamp-3 whitespace-pre-line border-l border-tactical-accent/30 pl-4">
+          <p className="text-[11px] text-gray-500 leading-relaxed italic line-clamp-3 whitespace-pre-line border-l border-tactical-accent/30 pl-4 whitespace-pre-wrap">
              {product.description}
           </p>
         </div>
@@ -205,7 +217,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
 
           {activeTab === 'gallery' && (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {product.images.map((img, i) => (
+              {allImages.map((img, i) => (
                 <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-white/10 group/item bg-slate-950 shadow-lg">
                   <img src={img} className="w-full h-full object-contain p-2" alt={`View ${i}`} />
                   <div className="absolute inset-0 bg-black/80 flex items-center justify-center gap-3 opacity-0 group-hover/item:opacity-100 transition-all duration-300 backdrop-blur-sm">
