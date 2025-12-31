@@ -11,6 +11,7 @@ export interface Product {
   name: string;
   category: string;
   price: string;
+  shopLink: string; // Tautan ke toko online
   image: string; // Featured image
   images: string[]; // All gallery images
   description: string;
@@ -18,5 +19,4 @@ export interface Product {
   marketing: MarketingData;
 }
 
-// Fixed: Added 'gallery' to TabType to match usage in components
 export type TabType = 'taglines' | 'prompts' | 'captions' | 'poster' | 'gallery';

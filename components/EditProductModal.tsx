@@ -79,7 +79,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                 <h3 className="text-sm font-bold text-white uppercase tracking-widest">Informasi Utama</h3>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-2">
+                <div className="md:col-span-1">
                   <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Nama Produk</label>
                   <input 
                     value={formData.name} 
@@ -87,7 +87,7 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                     className="w-full bg-slate-900/50 border border-white/10 rounded p-3 text-white focus:border-tactical-accent outline-none transition-colors"
                   />
                 </div>
-                <div>
+                <div className="md:col-span-1">
                   <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Label Harga</label>
                   <input 
                     value={formData.price} 
@@ -95,6 +95,23 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                     className="w-full bg-slate-900/50 border border-white/10 rounded p-3 text-tactical-gold font-bold focus:border-tactical-accent outline-none"
                   />
                 </div>
+                <div className="md:col-span-1">
+                  <label className="block text-[10px] font-bold text-blue-500 uppercase mb-2 tracking-widest">Shop Link (URL)</label>
+                  <input 
+                    value={formData.shopLink} 
+                    onChange={e => handleChange('shopLink', e.target.value)}
+                    className="w-full bg-slate-900/50 border border-blue-500/20 rounded p-3 text-blue-400 text-xs focus:border-blue-500 outline-none"
+                    placeholder="https://..."
+                  />
+                </div>
+             </div>
+             <div>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-widest">Deskripsi (Mendukung Multi-line)</label>
+                <textarea 
+                  value={formData.description} 
+                  onChange={e => handleChange('description', e.target.value)}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded p-3 text-sm text-gray-300 h-32 focus:border-tactical-accent outline-none resize-none"
+                />
              </div>
           </section>
 
@@ -200,7 +217,6 @@ export const EditProductModal: React.FC<EditProductModalProps> = ({ product, onS
                     </button>
                   </div>
                 ))}
-                <p className="text-[9px] text-gray-600 mt-2 italic">* Gunakan placeholder [Uploaded image] dan [Nama_Produk] di dalam prompt.</p>
              </div>
 
              {/* CAPTIONS */}

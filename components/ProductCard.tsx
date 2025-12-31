@@ -56,7 +56,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
         </button>
       )}
 
-      {/* LEFT PANEL: MEDIA & SPECS (Tampilan tetap kiri di Desktop) */}
+      {/* LEFT PANEL: MEDIA & SPECS */}
       <div className="lg:w-[450px] xl:w-[500px] flex-shrink-0 bg-slate-950 relative flex flex-col border-r border-white/5">
         <div className="relative h-72 lg:h-[400px] overflow-hidden group/gallery">
           
@@ -99,15 +99,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
             ))}
           </div>
 
-          {/* Labels */}
+          {/* Labels - PRICE NOW A CTA TEXT */}
           <div className="absolute top-6 left-6 z-10">
-            <span className="bg-tactical-gold text-white px-4 py-1.5 rounded-lg font-bold shadow-2xl text-xs tracking-wider uppercase border border-white/10">
-              {product.price}
-            </span>
+            <a 
+              href={product.shopLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-tactical-gold text-white px-5 py-2 rounded-lg font-bold shadow-2xl text-xs tracking-wider uppercase border border-white/10 flex items-center gap-2 hover:bg-amber-600 transition-colors group/price"
+            >
+              <i className="fa-solid fa-cart-shopping text-[10px] group-hover/price:animate-bounce"></i>
+              DAPATKAN DI SINI
+            </a>
           </div>
         </div>
 
-        {/* Specs Overlay - Di bagian bawah gambar */}
+        {/* Specs Overlay */}
         <div className="p-8 bg-gradient-to-t from-slate-900 to-slate-950 flex-1 border-t border-white/5">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -257,11 +263,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onCopy, isAdm
                     {product.marketing.taglines[0]}
                   </h5>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 py-6 border-t border-white/5 text-center bg-black/80 backdrop-blur-md">
+                <a 
+                  href={product.shopLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-0 left-0 right-0 py-6 border-t border-white/5 text-center bg-black/80 backdrop-blur-md hover:bg-tactical-gold/20 transition-all block"
+                >
                   <p className="text-tactical-gold font-bold text-xl tracking-[0.1em] font-display uppercase">
-                    Mulai {product.price}
+                    DAPATKAN DI SINI
                   </p>
-                </div>
+                  <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest block mt-1">Klik Untuk Beli</span>
+                </a>
                 <div className="absolute inset-0 pointer-events-none opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                 <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-tactical-accent/10 rounded-full blur-[80px]"></div>
               </div>

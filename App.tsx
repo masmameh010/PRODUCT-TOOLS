@@ -8,7 +8,7 @@ import { Product } from './types';
 import { db, isCloudConnected } from './firebase';
 import { collection, getDocs, doc, setDoc, onSnapshot } from 'firebase/firestore';
 
-const STORAGE_KEY = 'ATIRA_MARKETING_KIT_V4';
+const STORAGE_KEY = 'SYTONG_INDONESIA_MARKETING_KIT';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -121,7 +121,7 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-display font-bold text-white tracking-wider leading-none uppercase">
-                  ATIRA HUNTING <span className="text-tactical-accent">DIVISION</span>
+                  SYTONG <span className="text-tactical-accent">INDONESIA</span>
                 </h1>
                 {isCloudConnected && (
                   <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
@@ -215,7 +215,7 @@ export default function App() {
       <footer className="mt-20 py-16 border-t border-tactical-700 text-center bg-slate-950">
         <div className="flex flex-col items-center gap-4">
            <i className="fa-solid fa-crosshairs text-emerald-900 text-4xl mb-2"></i>
-           <p className="font-display font-bold text-2xl text-emerald-700 uppercase tracking-widest">ATIRA HUNTING DIVISION</p>
+           <p className="font-display font-bold text-2xl text-emerald-700 uppercase tracking-widest">SYTONG INDONESIA</p>
            <p className="text-gray-700 text-[9px] uppercase tracking-[0.5em] font-bold">
              Premium Optical Instruments &copy; 2026.
            </p>
@@ -224,3 +224,4 @@ export default function App() {
     </div>
   );
 }
+
